@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">recApp</string>
+    <string name="speechButtonText">Recognize Speech</string>
+</resources>
