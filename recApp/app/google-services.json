@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "827539410865",
+    "project_id": "recapp-9edb4",
+    "storage_bucket": "recapp-9edb4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:827539410865:android:ff91f79e58c4d8eb6f3790",
+        "android_client_info": {
+          "package_name": "com.microsoft.cognitiveservices.speech.project.recApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "827539410865-fdd0bmg2s7kipopp69iibni3nvq6bj4r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.microsoft.cognitiveservices.speech.project.recApp",
+            "certificate_hash": "141baa8b7835b06f2643928231f6fc1d27d64c7b"
+          }
+        },
+        {
+          "client_id": "827539410865-je9ah4cp5ajvq5gta0eb1g9mh1ecq663.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6N00Zk7cTL5nX8L0VLPzFeVfkPOjIV-Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "827539410865-je9ah4cp5ajvq5gta0eb1g9mh1ecq663.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

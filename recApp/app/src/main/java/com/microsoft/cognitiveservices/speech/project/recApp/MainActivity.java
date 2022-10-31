@@ -2,13 +2,14 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
 //
-package com.microsoft.cognitiveservices.speech.samples.sdkdemo;
+package com.microsoft.cognitiveservices.speech.project.recApp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -17,40 +18,28 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.difflib.DiffUtils;
-
-import com.github.difflib.patch.AbstractDelta;
-import com.github.difflib.patch.DeltaType;
-import com.github.difflib.patch.Patch;
-import com.microsoft.cognitiveservices.speech.PronunciationAssessmentConfig;
-import com.microsoft.cognitiveservices.speech.PronunciationAssessmentGradingSystem;
-import com.microsoft.cognitiveservices.speech.PronunciationAssessmentGranularity;
-import com.microsoft.cognitiveservices.speech.PronunciationAssessmentResult;
-import com.microsoft.cognitiveservices.speech.PropertyId;
-import com.microsoft.cognitiveservices.speech.WordLevelTimingResult;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.microsoft.cognitiveservices.speech.audio.AudioConfig;
-import com.microsoft.cognitiveservices.speech.ResultReason;
-import com.microsoft.cognitiveservices.speech.intent.LanguageUnderstandingModel;
 import com.microsoft.cognitiveservices.speech.SpeechConfig;
-import com.microsoft.cognitiveservices.speech.intent.IntentRecognitionResult;
-import com.microsoft.cognitiveservices.speech.intent.IntentRecognizer;
-import com.microsoft.cognitiveservices.speech.SpeechRecognitionResult;
 import com.microsoft.cognitiveservices.speech.SpeechRecognizer;
-import com.microsoft.cognitiveservices.speech.CancellationDetails;
-import com.microsoft.cognitiveservices.speech.KeywordRecognitionModel;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.microsoft.cognitiveservices.speech.project.recApp.models.User;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -65,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     //
 
     // Replace below with your own subscription key
-    private static final String SpeechSubscriptionKey = "f18de738efca49e1945bde1fc145bc70";
+    private static final String SpeechSubscriptionKey = "";
     // Replace below with your own service region (e.g., "westus").
     private static final String SpeechRegion = "westus";
 
@@ -86,6 +75,13 @@ public class MainActivity extends AppCompatActivity {
     private TextView recognizedTextView;
 
     private Button recognizeContinuousButton;
+    private Button signout;
+
+    private FirebaseDatabase database;
+    private String urldb;
+    private FirebaseStorage storage;
+    private StorageReference reference;
+    private FirebaseAuth auth;
 
     private MicrophoneStream microphoneStream;
     private MicrophoneStream createMicrophoneStream() {
@@ -109,6 +105,13 @@ public class MainActivity extends AppCompatActivity {
         recognizedTextView = findViewById(R.id.recognizedText);
         recognizedTextView.setMovementMethod(new ScrollingMovementMethod());
         recognizeContinuousButton = findViewById(R.id.buttonRecognizeContinuous);
+        signout = findViewById(R.id.signoutmain);
+        urldb = "";
+
+        database = FirebaseDatabase.getInstance(urldb);
+        storage = FirebaseStorage.getInstance();
+        auth = FirebaseAuth.getInstance();
+        reference = storage.getReference().child(auth.getUid()).child("Document");
 
         // Initialize SpeechSDK and request required permissions.
         try {
@@ -149,11 +152,8 @@ public class MainActivity extends AppCompatActivity {
                         final Future<Void> task = reco.stopContinuousRecognitionAsync();
                         setOnTaskCompletedListener(task, result -> {
                             Log.i(logTag, "Continuous recognition stopped.");
-                            try {
-                                loadText();
-                            } catch (IOException e) {
-                                Log.e("IOE","IOException");
-                            }
+                            Log.v("sign","Loadding text into file");
+                            loadText();
                             MainActivity.this.runOnUiThread(() -> {
                                 clickedButton.setText(buttonText);
                             });
@@ -206,6 +206,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        signout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                Intent i = new Intent(MainActivity.this,Login.class);
+                startActivity(i);
+            }
+        });
     }
 
     private void displayException(Exception ex) {
@@ -261,27 +269,18 @@ public class MainActivity extends AppCompatActivity {
         s_executorService = Executors.newCachedThreadPool();
     }
 
-    private void loadText() throws IOException{
+    private void loadText(){
         String reco = recognizedTextView.getText().toString();
-        if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            try {
-                File sdcard = Environment.getExternalStorageDirectory();
-                File folder = new File(sdcard.getAbsolutePath()+"/transcription");
-                if(!folder.exists())
-                    folder.mkdir();
-                File file = new File(folder,"text.txt");
-                FileOutputStream fileOutputStream = new FileOutputStream(file);
-                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
-                outputStreamWriter.write(reco);
-                outputStreamWriter.close();
-                fileOutputStream.flush();
-                Toast.makeText(this,folder.getAbsolutePath().toString(),Toast.LENGTH_LONG).show();
-            } catch (FileNotFoundException e) {
-                Log.e("ffe","FileNotFoundException");
-            } catch (IOException e) {
-                Log.e("IO","IOException");
+        reference.child("text.txt").putBytes(reco.getBytes()).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(MainActivity.this,"File uploaded",Toast.LENGTH_LONG).show();
             }
-        }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(MainActivity.this,"Failed",Toast.LENGTH_LONG).show();
+            }
+        });
     }
-
 }

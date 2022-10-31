@@ -4,7 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/IMAD Project/cognitive-services-speech-sdk-master/samples/java/android/sdkdemo/app/src/main/res/layout/activity_main.xml" value="0.22" />
-        <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/activity_main.xml" value="0.1796875" />
+        <entry key="..\:/IMAD Project/recApp/app/src/main/res/drawable/seepass.xml" value="0.1" />
+        <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/activity_login.xml" value="0.22" />
+        <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/activity_main.xml" value="0.16666666666666666" />
+        <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/activity_sign_up.xml" value="0.22" />
         <entry key="..\:/IMAD Project/sdkdemo/app/src/main/res/layout/activity_main.xml" value="0.1796875" />
       </map>
     </option>
