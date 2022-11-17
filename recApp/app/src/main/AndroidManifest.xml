@@ -14,10 +14,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.microsoft.cognitiveservices.speech.project.recApp.SignUp"
+            android:name=".Remove_student"
             android:exported="false" />
         <activity
-            android:name="com.microsoft.cognitiveservices.speech.project.recApp.Login"
+            android:name=".Add_student"
+            android:exported="false" />
+        <activity
+            android:name=".Subjects"
+            android:exported="false" />
+        <activity
+            android:name=".Transcriptions"
+            android:exported="false" />
+        <activity
+            android:name=".SignUp"
+            android:exported="false" />
+        <activity
+            android:name=".Login"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,8 +38,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.microsoft.cognitiveservices.speech.project.recApp.MainActivity"
-            android:exported="false"/>
+            android:name=".MainActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

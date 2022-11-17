@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">recApp</string>
     <string name="speechButtonText">Recognize Speech</string>
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
 </resources>

@@ -1,14 +1,32 @@
 package com.microsoft.cognitiveservices.speech.project.recApp.models;
 
 public class User {
-    private String firstname,lastname,username,email,password;
+    private String firstname;
+    private String lastname;
+    private String username;
+    private String email;
+    private String password;
 
-    public User(String firstname, String lastname, String username, String email, String password) {
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public User() {
+    }
+
+    private String userId;
+
+    public User(String firstname, String lastname, String username, String email, String password,String userId) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.userId = userId;
     }
 
     public String getFirstname() {

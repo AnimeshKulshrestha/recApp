@@ -44,6 +44,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/logemail"
+            android:singleLine="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="email" />
@@ -63,6 +64,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/logpass"
+            android:singleLine="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="password"

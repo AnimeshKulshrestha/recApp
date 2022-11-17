@@ -40,7 +40,7 @@ public class SignUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        urldb = "";
+        urldb = "https://recapp-9edb4-default-rtdb.asia-southeast1.firebasedatabase.app";
 
         existinglogin = findViewById(R.id.existinglogin);
         newusername = findViewById(R.id.newusername);
@@ -133,8 +133,8 @@ public class SignUp extends AppCompatActivity {
                                     email = newemail.getText().toString().trim(),
                                     pass = newpass.getText().toString().trim(),
                                     username = newusername.getText().toString().trim();
-                            User user = new User(first,last,username,email,pass);
                             String id = task.getResult().getUser().getUid();
+                            User user = new User(first,last,username,email,pass,id);
                             database.getReference().child("Users").child(id).setValue(user);
                             Intent i = new Intent(SignUp.this,Login.class);
                             startActivity(i);

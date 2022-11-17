@@ -43,6 +43,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/fname"
+            android:singleLine="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="  firstname" />
@@ -67,6 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="  lastname"
+            android:singleLine="true"
             tools:layout_editor_absoluteX="211dp"
             tools:layout_editor_absoluteY="76dp" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -89,6 +91,7 @@
             android:id="@+id/newemail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:hint="email" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -111,6 +114,7 @@
             android:id="@+id/newusername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:hint="username" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -132,6 +136,7 @@
             android:id="@+id/newpass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:hint="password"
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -154,6 +159,7 @@
             android:id="@+id/cnfpass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:hint="confirm password"
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>

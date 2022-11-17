@@ -5,11 +5,14 @@
 package com.microsoft.cognitiveservices.speech.project.recApp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import android.content.Intent;
+import android.content.DialogInterface;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -18,27 +21,21 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.microsoft.cognitiveservices.speech.audio.AudioConfig;
 import com.microsoft.cognitiveservices.speech.SpeechConfig;
 import com.microsoft.cognitiveservices.speech.SpeechRecognizer;
-import com.microsoft.cognitiveservices.speech.project.recApp.models.User;
+import com.microsoft.cognitiveservices.speech.project.recApp.dialogFrag.DialogFragment;
+import com.microsoft.cognitiveservices.speech.project.recApp.dialogFrag.LoadingDialog;
+import com.microsoft.cognitiveservices.speech.project.recApp.models.Transmodel;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -48,40 +45,42 @@ import static android.Manifest.permission.INTERNET;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.RECORD_AUDIO;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DialogFragment.DialogFragmentListener {
     //
     // Configuration for speech recognition
     //
 
     // Replace below with your own subscription key
-    private static final String SpeechSubscriptionKey = "";
+    private static final String SpeechSubscriptionKey = "5fa774581bf441b3abf5334bc2e370c7";
     // Replace below with your own service region (e.g., "westus").
-    private static final String SpeechRegion = "westus";
+    private static final String SpeechRegion = "eastus";
 
     //
     // Configuration for intent recognition
     //
 
-    // Replace below with your own Language Understanding subscription key
-    // The intent recognition service calls the required key 'endpoint key'.
-    private static final String LanguageUnderstandingSubscriptionKey = "YourLanguageUnderstandingSubscriptionKey";
-    // Replace below with the deployment region of your Language Understanding application
-    private static final String LanguageUnderstandingServiceRegion = "YourLanguageUnderstandingServiceRegion";
-    // Replace below with the application ID of your Language Understanding application
-    private static final String LanguageUnderstandingAppId = "YourLanguageUnderstandingAppId";
-    // Replace below with your own Keyword model file, kws.table model file is configured for "Computer" keyword
-    private static final String KwsModelFile = "kws.table";
+//    // Replace below with your own Language Understanding subscription key
+//    // The intent recognition service calls the required key 'endpoint key'.
+//    private static final String LanguageUnderstandingSubscriptionKey = "YourLanguageUnderstandingSubscriptionKey";
+//    // Replace below with the deployment region of your Language Understanding application
+//    private static final String LanguageUnderstandingServiceRegion = "YourLanguageUnderstandingServiceRegion";
+//    // Replace below with the application ID of your Language Understanding application
+//    private static final String LanguageUnderstandingAppId = "YourLanguageUnderstandingAppId";
+//    // Replace below with your own Keyword model file, kws.table model file is configured for "Computer" keyword
+//    private static final String KwsModelFile = "kws.table";
 
     private TextView recognizedTextView;
 
     private Button recognizeContinuousButton;
-    private Button signout;
-
+    private AlertDialog.Builder builder;
+    private DialogFragment dialogFragment;
     private FirebaseDatabase database;
-    private String urldb;
+    private String urldb,filename,pushId;
+    private Boolean saving;
     private FirebaseStorage storage;
     private StorageReference reference;
     private FirebaseAuth auth;
+    private LoadingDialog loadingDIalog;
 
     private MicrophoneStream microphoneStream;
     private MicrophoneStream createMicrophoneStream() {
@@ -105,13 +104,16 @@ public class MainActivity extends AppCompatActivity {
         recognizedTextView = findViewById(R.id.recognizedText);
         recognizedTextView.setMovementMethod(new ScrollingMovementMethod());
         recognizeContinuousButton = findViewById(R.id.buttonRecognizeContinuous);
-        signout = findViewById(R.id.signoutmain);
-        urldb = "";
+        urldb = "https://recapp-9edb4-default-rtdb.asia-southeast1.firebasedatabase.app";
+        builder = new AlertDialog.Builder(this);
+        pushId = getIntent().getStringExtra("pushId");
+        dialogFragment = new DialogFragment();
 
+        loadingDIalog = new LoadingDialog(MainActivity.this);
         database = FirebaseDatabase.getInstance(urldb);
         storage = FirebaseStorage.getInstance();
         auth = FirebaseAuth.getInstance();
-        reference = storage.getReference().child(auth.getUid()).child("Document");
+        reference = storage.getReference().child(auth.getUid()).child(pushId);
 
         // Initialize SpeechSDK and request required permissions.
         try {
@@ -131,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             speechConfig = SpeechConfig.fromSubscription(SpeechSubscriptionKey, SpeechRegion);
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            Log.e("failed sub",ex.getMessage());
             displayException(ex);
             return;
         }
@@ -153,13 +155,13 @@ public class MainActivity extends AppCompatActivity {
                         setOnTaskCompletedListener(task, result -> {
                             Log.i(logTag, "Continuous recognition stopped.");
                             Log.v("sign","Loadding text into file");
-                            loadText();
                             MainActivity.this.runOnUiThread(() -> {
                                 clickedButton.setText(buttonText);
                             });
                             enableButtons();
                             continuousListeningStarted = false;
                         });
+                        openDialog();
                     } else {
                         continuousListeningStarted = false;
                     }
@@ -171,7 +173,6 @@ public class MainActivity extends AppCompatActivity {
 
                 try {
                     content.clear();
-
                     audioInput = AudioConfig.fromStreamInput(createMicrophoneStream());
                     reco = new SpeechRecognizer(speechConfig, audioInput);
 
@@ -206,14 +207,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        signout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-                Intent i = new Intent(MainActivity.this,Login.class);
-                startActivity(i);
-            }
-        });
     }
 
     private void displayException(Exception ex) {
@@ -259,6 +252,18 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void applytext(String topic, Boolean save) {
+        filename = topic;
+        saving = save;
+        if(saving)
+            loadText(filename);
+        else{
+            alert_cancel();
+        }
+    }
+
+
     private interface OnTaskCompletedListener<T> {
         void onCompleted(T taskResult);
     }
@@ -269,18 +274,75 @@ public class MainActivity extends AppCompatActivity {
         s_executorService = Executors.newCachedThreadPool();
     }
 
-    private void loadText(){
+    private void loadText(String title){
         String reco = recognizedTextView.getText().toString();
-        reference.child("text.txt").putBytes(reco.getBytes()).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        loadingDIalog.startLoading();
+        reference.child(title+".txt").putBytes(reco.getBytes()).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(MainActivity.this,"File uploaded",Toast.LENGTH_LONG).show();
+                reference.child(title+".txt").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        DatabaseReference dbref = database.getReference().child("Users").child(auth.getUid()).child("Taught")
+                                .child(pushId).child("transcriptions");
+                        String t_uId = dbref.push().getKey();
+                        Transmodel transmodel = new Transmodel(title,uri.toString(),t_uId);
+                        database.getReference().child("Users").child(auth.getUid()).child("Taught")
+                                .child(pushId).child("transcriptions")
+                                .child(t_uId).setValue(transmodel).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        loadingDIalog.dismiss();
+                                        Toast.makeText(MainActivity.this,"File uploaded",Toast.LENGTH_LONG).show();
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        loadingDIalog.dismiss();
+                                        Toast.makeText(MainActivity.this,"Failed",Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                    }
+                });
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                loadingDIalog.dismiss();
                 Toast.makeText(MainActivity.this,"Failed",Toast.LENGTH_LONG).show();
             }
         });
     }
+
+    public void openDialog(){
+        dialogFragment.show(getSupportFragmentManager(),"Set Title");
+        dialogFragment.setCancelable(false);
+    }
+
+    public void alert_cancel(){
+        builder.setTitle("Are you Sure?")
+                .setMessage("The transcription will be lost")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(MainActivity.this,"You cancelled the save",Toast.LENGTH_LONG).show();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        openDialog();
+                    }
+                });
+        builder.setCancelable(false);
+        AlertDialog alertDialog =  builder.create();
+        alertDialog.show();
+    }
+    @Override
+    public void onBackPressed() {
+        if (dialogFragment.isResumed()) {
+            alert_cancel();
+        } else
+            super.onBackPressed();
+    }
+
 }
