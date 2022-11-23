@@ -13,6 +13,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -91,6 +92,14 @@ public class Transcriptions extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         navigationView = findViewById(R.id.trans_nav);
         navigationView.setCheckedItem(R.id.transcriptions);
+        findViewById(R.id.new_trans_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i1 = new Intent(Transcriptions.this,MainActivity.class);
+                i1.putExtra("pushId",pushId);
+                startActivity(i1);
+            }
+        });
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -114,11 +123,6 @@ public class Transcriptions extends AppCompatActivity {
                         i.putExtra("push_Id",pushId);
                         i.putExtra("coursename",coursename);
                         startActivity(i);
-                        break;
-                    case R.id.new_transcription:
-                        Intent i1 = new Intent(Transcriptions.this,MainActivity.class);
-                        i1.putExtra("pushId",pushId);
-                        startActivity(i1);
                         break;
                     case R.id.delete_course:
                             builder.setTitle("Are you Sure?")

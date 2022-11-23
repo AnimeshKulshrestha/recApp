@@ -7,9 +7,6 @@
             android:id="@+id/transcriptions"
             android:title="Transcription" />
         <item
-            android:id="@+id/new_transcription"
-            android:title="New Transcription" />
-        <item
             android:id="@+id/list_stu"
             android:title="List Students" />
         <item
