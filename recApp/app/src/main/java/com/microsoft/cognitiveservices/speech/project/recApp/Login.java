@@ -112,7 +112,9 @@ public class Login extends AppCompatActivity{
                                         if(mAuth.getCurrentUser().isEmailVerified()) {
                                             Intent i = new Intent(Login.this, Subjects.class);
                                             startActivity(i);
+                                            finish();
                                         }else{
+                                            mAuth.signOut();
                                             Toast.makeText(Login.this,"Please verify your email",Toast.LENGTH_LONG).show();
                                         }
                                     } else {

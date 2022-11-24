@@ -89,8 +89,10 @@ public class Transcriptions extends AppCompatActivity {
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-        if(state.equals("Taught"))
+        if(state.equals("Taught")) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            findViewById(R.id.new_trans_btn).setVisibility(View.VISIBLE);
+        }
         navigationView = findViewById(R.id.trans_nav);
         navigationView.setCheckedItem(R.id.transcriptions);
         database.getReference().child("Users").child(firebaseAuth.getUid())

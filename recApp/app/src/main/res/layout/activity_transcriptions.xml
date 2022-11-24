@@ -78,6 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New Transcription"
+            android:visibility="gone"
             android:background="@drawable/button2"
             app:layout_constraintBottom_toBottomOf="@+id/refresh_trans"
             app:layout_constraintEnd_toEndOf="parent"
