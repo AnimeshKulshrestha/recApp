@@ -5,7 +5,6 @@ public class User {
     private String lastname;
     private String username;
     private String email;
-    private String password;
 
     public String getUserId() {
         return userId;
@@ -20,12 +19,11 @@ public class User {
 
     private String userId;
 
-    public User(String firstname, String lastname, String username, String email, String password,String userId) {
+    public User(String firstname, String lastname, String username, String email,String userId) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.username = username;
         this.email = email;
-        this.password = password;
         this.userId = userId;
     }
 
@@ -61,11 +59,4 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

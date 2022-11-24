@@ -4,5 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="backgroundIcon">#f5efbb</color>
+    <color name="backgroundnavsub">#73A9AD</color>
+    <color name="backgroundnavtrans">#C4DFAA</color>
 
 </resources>

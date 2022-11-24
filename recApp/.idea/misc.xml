@@ -5,18 +5,24 @@
       <map>
         <entry key="..\:/IMAD Project/cognitive-services-speech-sdk-master/samples/java/android/sdkdemo/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/IMAD Project/recApp/app/src/main/res/drawable/seepass.xml" value="0.1" />
+        <entry key="..\:/IMAD Project/recApp/app/src/main/res/drawable/text_input.xml" value="0.132" />
         <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/activity_add_student.xml" value="0.22" />
         <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/activity_add_subject.xml" value="0.22" />
-        <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/activity_login.xml" value="0.22" />
+        <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/activity_forgot_password.xml" value="0.22" />
+        <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/activity_login.xml" value="0.4466666666666667" />
         <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/activity_remove_student.xml" value="0.3333333333333333" />
         <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/activity_sign_up.xml" value="0.22" />
         <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/activity_splash_screen.xml" value="0.1796875" />
         <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/activity_subjects.xml" value="0.1796875" />
         <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/activity_transcriptions.xml" value="0.22" />
+        <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/add_gmail_info.xml" value="0.22" />
         <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/courses_rv.xml" value="0.5" />
         <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/dot_menu.xml" value="0.17864583333333334" />
+        <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/fragment_first.xml" value="0.1796875" />
+        <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/fragment_second.xml" value="0.1796875" />
         <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/layout_add_topic.xml" value="0.17864583333333334" />
+        <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/nav_header.xml" value="0.3333333333333333" />
         <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/nav_menu.xml" value="0.1796875" />
         <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/student_rv.xml" value="0.3333333333333333" />
         <entry key="..\:/IMAD Project/recApp/app/src/main/res/layout/student_rv_rem.xml" value="0.3333333333333333" />

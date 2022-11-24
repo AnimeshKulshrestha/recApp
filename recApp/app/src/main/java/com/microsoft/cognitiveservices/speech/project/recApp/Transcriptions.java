@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -92,6 +93,27 @@ public class Transcriptions extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         navigationView = findViewById(R.id.trans_nav);
         navigationView.setCheckedItem(R.id.transcriptions);
+        database.getReference().child("Users").child(firebaseAuth.getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        User user = snapshot.getValue(User.class);
+                        View header = LayoutInflater.from(Transcriptions.this).inflate(R.layout.nav_header, null);
+                        navigationView.addHeaderView(header);
+                        header.setBackgroundColor(getResources().getColor(R.color.backgroundnavtrans));
+                        TextView fname_tv = header.findViewById(R.id.fname_tv);
+                        fname_tv.setText(user.getFirstname());
+                        TextView lname_tv = header.findViewById(R.id.lname_tv);
+                        lname_tv.setText(user.getLastname());
+                        TextView uname_tv = header.findViewById(R.id.uname_tv);
+                        uname_tv.setText(user.getUsername());
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
         findViewById(R.id.new_trans_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

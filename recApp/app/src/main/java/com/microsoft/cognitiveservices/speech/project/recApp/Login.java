@@ -1,24 +1,42 @@
 package com.microsoft.cognitiveservices.speech.project.recApp;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.renderscript.Long2;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.*;
 
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
+import com.firebase.ui.auth.IdpResponse;
+import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.SignInMethodQueryResult;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.microsoft.cognitiveservices.speech.project.recApp.models.User;
+
+import java.util.Arrays;
+import java.util.List;
 
 
-public class Login extends AppCompatActivity {
+public class Login extends AppCompatActivity{
 
     private TextView newsignup;
     private TextInputEditText logemail,logpass;
@@ -26,6 +44,7 @@ public class Login extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     Boolean valid_m,valid_p;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +56,6 @@ public class Login extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-
 
         newsignup = findViewById(R.id.newsignup);
         logemail = findViewById(R.id.logemail);
@@ -91,8 +109,12 @@ public class Login extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-                                        Intent i = new Intent(Login.this, Subjects.class);
-                                        startActivity(i);
+                                        if(mAuth.getCurrentUser().isEmailVerified()) {
+                                            Intent i = new Intent(Login.this, Subjects.class);
+                                            startActivity(i);
+                                        }else{
+                                            Toast.makeText(Login.this,"Please verify your email",Toast.LENGTH_LONG).show();
+                                        }
                                     } else {
                                         Toast.makeText(Login.this,
                                                 "Authentication failed.", Toast.LENGTH_LONG).show();
@@ -104,6 +126,20 @@ public class Login extends AppCompatActivity {
                 }
             }
         });
+
+        findViewById(R.id.forgot_pass_tv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent forgot = new Intent(Login.this,ForgotPassword.class);
+                String email = logemail.getText().toString().trim();
+                if(email!=null)
+                    forgot.putExtra("mail_id",email);
+                else
+                    forgot.putExtra("mail_id","");
+                startActivity(forgot);
+            }
+        });
+
     }
     public void validmail(){
         if(!(logemail.getText().equals("")||logemail.getText().equals(null)))
@@ -113,4 +149,5 @@ public class Login extends AppCompatActivity {
         if(!(logpass.getText().equals("")||logpass.getText().equals(null)))
             valid_p = true;
     }
+
 }

@@ -51,23 +51,10 @@ public class MainActivity extends AppCompatActivity implements DialogFragment.Di
     //
 
     // Replace below with your own subscription key
-    private static final String SpeechSubscriptionKey = "5fa774581bf441b3abf5334bc2e370c7";
+    private static final String SpeechSubscriptionKey = "d0746c9b0beb430c823ead39a4aa84d2";
     // Replace below with your own service region (e.g., "westus").
     private static final String SpeechRegion = "eastus";
 
-    //
-    // Configuration for intent recognition
-    //
-
-//    // Replace below with your own Language Understanding subscription key
-//    // The intent recognition service calls the required key 'endpoint key'.
-//    private static final String LanguageUnderstandingSubscriptionKey = "YourLanguageUnderstandingSubscriptionKey";
-//    // Replace below with the deployment region of your Language Understanding application
-//    private static final String LanguageUnderstandingServiceRegion = "YourLanguageUnderstandingServiceRegion";
-//    // Replace below with the application ID of your Language Understanding application
-//    private static final String LanguageUnderstandingAppId = "YourLanguageUnderstandingAppId";
-//    // Replace below with your own Keyword model file, kws.table model file is configured for "Computer" keyword
-//    private static final String KwsModelFile = "kws.table";
 
     private TextView recognizedTextView;
 
@@ -81,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements DialogFragment.Di
     private StorageReference reference;
     private FirebaseAuth auth;
     private LoadingDialog loadingDIalog;
+    private Button save_file;
 
     private MicrophoneStream microphoneStream;
     private MicrophoneStream createMicrophoneStream() {
@@ -101,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements DialogFragment.Di
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        save_file = findViewById(R.id.upload_file);
         recognizedTextView = findViewById(R.id.recognizedText);
         recognizedTextView.setMovementMethod(new ScrollingMovementMethod());
         recognizeContinuousButton = findViewById(R.id.buttonRecognizeContinuous);
@@ -204,6 +193,13 @@ public class MainActivity extends AppCompatActivity implements DialogFragment.Di
                     System.out.println(ex.getMessage());
                     displayException(ex);
                 }
+            }
+        });
+
+        save_file.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openDialog();
             }
         });
 
@@ -322,7 +318,7 @@ public class MainActivity extends AppCompatActivity implements DialogFragment.Di
 
     public void alert_cancel(){
         builder.setTitle("Are you Sure?")
-                .setMessage("The transcription will be lost")
+                .setMessage("The transcription will be lost if you don't save it")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Toast.makeText(MainActivity.this,"You cancelled the save",Toast.LENGTH_LONG).show();

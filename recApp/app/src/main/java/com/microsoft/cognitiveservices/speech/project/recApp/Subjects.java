@@ -1,6 +1,7 @@
 package com.microsoft.cognitiveservices.speech.project.recApp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,9 +15,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
@@ -81,6 +84,27 @@ public class Subjects extends AppCompatActivity implements SubjectDialog.Subject
             navigationView.setCheckedItem(R.id.taught);
         }
 
+        database.getReference().child("Users").child(auth.getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        User user = snapshot.getValue(User.class);
+                        View header = LayoutInflater.from(Subjects.this).inflate(R.layout.nav_header, null);
+                        header.setBackgroundColor(getResources().getColor(R.color.backgroundnavsub));
+                        navigationView.addHeaderView(header);
+                        TextView fname_tv = header.findViewById(R.id.fname_tv);
+                        fname_tv.setText(user.getFirstname());
+                        TextView lname_tv = header.findViewById(R.id.lname_tv);
+                        lname_tv.setText(user.getLastname());
+                        TextView uname_tv = header.findViewById(R.id.uname_tv);
+                        uname_tv.setText(user.getUsername());
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -223,7 +247,11 @@ public class Subjects extends AppCompatActivity implements SubjectDialog.Subject
                     studies.setSubject_Id(subj_id);
                     studiesModels.add(studies);
                 }
-                setStudyAdapter(courses_study);
+                try {
+                    setStudyAdapter(courses_study);
+                }catch(Exception ex){
+                    Log.e("error",ex.toString());
+                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -231,7 +259,7 @@ public class Subjects extends AppCompatActivity implements SubjectDialog.Subject
             }
         });
     }
-    public void setStudyAdapter(ArrayList<CourseModel> courses_study){
+    public void setStudyAdapter(ArrayList<CourseModel> courses_study) throws NullPointerException {
         DatabaseReference ref_stu;
         for(StudiesModel study:studiesModels){
             ref_stu = database.getReference().child("Users").child(study.getInst_id()).child("Taught").child(study.getSubject_Id());
@@ -242,6 +270,11 @@ public class Subjects extends AppCompatActivity implements SubjectDialog.Subject
                     if(courseModel!=null) {
                         courses_study.add(0, courseModel);
                         studyingRVAdapter.notifyDataSetChanged();
+                    }
+                    if(courses_study.size()==0){
+                        findViewById(R.id.empty_sub).setVisibility(View.VISIBLE);
+                    }else{
+                        findViewById(R.id.empty_sub).setVisibility(View.GONE);
                     }
                     Log.e("test",courses_study.size()+"");
                 }

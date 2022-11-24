@@ -124,6 +124,7 @@ public class TransReyclerAdaptor extends RecyclerView.Adapter<TransReyclerAdapto
                                                 }
                                             }
                                         });
+                                getReference().child(trans.getUnique_id()).removeValue();
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {

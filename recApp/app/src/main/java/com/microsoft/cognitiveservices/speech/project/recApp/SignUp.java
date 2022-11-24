@@ -3,6 +3,8 @@ package com.microsoft.cognitiveservices.speech.project.recApp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseUser;
+import com.microsoft.cognitiveservices.speech.project.recApp.dialogFrag.LoadingDialog;
 import com.microsoft.cognitiveservices.speech.project.recApp.models.User;
 
 import android.content.Intent;
@@ -34,6 +36,8 @@ public class SignUp extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseDatabase database;
 
+    private LoadingDialog loadingDialog;
+
     private String urldb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +48,7 @@ public class SignUp extends AppCompatActivity {
 
         existinglogin = findViewById(R.id.existinglogin);
         newusername = findViewById(R.id.newusername);
+        loadingDialog = new LoadingDialog(SignUp.this);
         newpass = findViewById(R.id.newpass);
         newemail = findViewById(R.id.newemail);
         fname = findViewById(R.id.fname);
@@ -68,6 +73,18 @@ public class SignUp extends AppCompatActivity {
             }
         });
 
+        newusername.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                usernameValid();
+            }
+        });
         fname.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
@@ -131,16 +148,28 @@ public class SignUp extends AppCompatActivity {
                             String first = fname.getText().toString().trim(),
                                     last = lname.getText().toString().trim(),
                                     email = newemail.getText().toString().trim(),
-                                    pass = newpass.getText().toString().trim(),
                                     username = newusername.getText().toString().trim();
                             String id = task.getResult().getUser().getUid();
-                            User user = new User(first,last,username,email,pass,id);
-                            database.getReference().child("Users").child(id).setValue(user);
-                            Intent i = new Intent(SignUp.this,Login.class);
-                            startActivity(i);
+                            loadingDialog.startLoading();
+                            Toast.makeText(SignUp.this,"Email for email confirmation",Toast.LENGTH_LONG).show();
+                            FirebaseUser new_user= mAuth.getCurrentUser();
+                            new_user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()) {
+                                        User user = new User(first, last, username, email, id);
+                                        database.getReference().child("Users").child(id).setValue(user);
+                                        mAuth.signOut();
+                                        Intent i = new Intent(SignUp.this, Login.class);
+                                        startActivity(i);
+                                        finish();
+                                    }
+                                    loadingDialog.dismiss();
+                                }
+                            });
                         }
                         else{
-                            Toast.makeText(SignUp.this,"Error... Check your email", Toast.LENGTH_LONG).show();
+                            Toast.makeText(SignUp.this,"Error... Invalid Entry", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -149,6 +178,17 @@ public class SignUp extends AppCompatActivity {
 
 
     }
+
+    public boolean usernameValid(){
+        String username = newusername.getText().toString().trim();
+        if(username.equals("")){
+            unlayout.setError("Field can't be empty");
+            return false;
+        }
+        flayout.setError(null);
+        return true;
+    }
+
     public boolean isNameValid(@NonNull String name){
         for(int i=0;i<name.length();i++){
             if(Character.isDigit(name.charAt(i)))
@@ -158,7 +198,7 @@ public class SignUp extends AppCompatActivity {
     }
     public boolean fnameValid(){
         String firstname = fname.getText().toString().trim();
-        if(firstname==""){
+        if(firstname.equals("")){
             flayout.setError("Field can't be empty");
             return false;
         }

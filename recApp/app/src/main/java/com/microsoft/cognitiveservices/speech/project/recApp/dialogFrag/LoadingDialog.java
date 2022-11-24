@@ -3,6 +3,7 @@ package com.microsoft.cognitiveservices.speech.project.recApp.dialogFrag;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.view.LayoutInflater;
+import android.widget.TextView;
 
 import com.microsoft.cognitiveservices.speech.project.recApp.R;
 

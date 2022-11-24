@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/back_img"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SignUp">
@@ -11,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sign Up"
+        android:background="@drawable/button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -23,6 +25,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Already a user? LogIn"
+        android:textColor="#000000"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signup" />
@@ -31,7 +35,7 @@
         android:id="@+id/fnamelayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
+        android:layout_marginStart="10dp"
         android:weightSum="2"
         app:endIconMode="clear_text"
         app:errorIconDrawable="@drawable/ic_error"
@@ -43,17 +47,22 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/fname"
-            android:singleLine="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="  firstname" />
+            android:background="@drawable/text_input"
+            android:hint="  Firstname"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/lnamelayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="10dp"
         app:endIconMode="clear_text"
         app:errorIconDrawable="@drawable/ic_error"
         app:layout_constraintBottom_toTopOf="@+id/newemaillayout"
@@ -67,7 +76,10 @@
             android:id="@+id/lname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="  lastname"
+            android:background="@drawable/text_input"
+            android:hint="  Lastname"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:singleLine="true"
             tools:layout_editor_absoluteX="211dp"
             tools:layout_editor_absoluteY="76dp" />
@@ -77,8 +89,10 @@
         android:id="@+id/newemaillayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:errorIconDrawable="@drawable/ic_error"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         app:endIconMode="clear_text"
+        app:errorIconDrawable="@drawable/ic_error"
         app:layout_constraintBottom_toTopOf="@+id/newuserlayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -91,8 +105,9 @@
             android:id="@+id/newemail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:hint="email" />
+            android:background="@drawable/text_input"
+            android:hint="E-mail"
+            android:singleLine="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -100,10 +115,10 @@
         android:id="@+id/newuserlayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="1dp"
-        app:errorIconDrawable="@drawable/ic_error"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         app:endIconMode="clear_text"
+        app:errorIconDrawable="@drawable/ic_error"
         app:layout_constraintBottom_toTopOf="@+id/newpasslayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -114,18 +129,19 @@
             android:id="@+id/newusername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:hint="username" />
+            android:background="@drawable/text_input"
+            android:hint="Username"
+            android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/newpasslayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="1dp"
-        app:errorIconDrawable="@drawable/ic_error"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         app:endIconMode="password_toggle"
+        app:errorIconDrawable="@drawable/ic_error"
         app:layout_constraintBottom_toTopOf="@+id/cnfpasslayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -136,19 +152,20 @@
             android:id="@+id/newpass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:hint="password"
-            android:inputType="textPassword" />
+            android:background="@drawable/text_input"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/cnfpasslayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="1dp"
-        app:errorIconDrawable="@drawable/ic_error"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         app:endIconMode="password_toggle"
+        app:errorIconDrawable="@drawable/ic_error"
         app:layout_constraintBottom_toTopOf="@+id/signup"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -159,9 +176,10 @@
             android:id="@+id/cnfpass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:hint="confirm password"
-            android:inputType="textPassword" />
+            android:background="@drawable/text_input"
+            android:hint="Confirm Password"
+            android:inputType="textPassword"
+            android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

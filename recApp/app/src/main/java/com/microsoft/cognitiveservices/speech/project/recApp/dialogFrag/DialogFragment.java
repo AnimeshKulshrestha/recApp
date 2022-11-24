@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,6 +35,15 @@ public class DialogFragment extends AppCompatDialogFragment {
         }
     }
 
+    public boolean validate(String insert){
+        if(insert==null || insert.equals("")){
+            Toast.makeText(getContext(),"Field cannot be empty",Toast.LENGTH_LONG).show();
+            return false;
+        }else{
+            return true;
+        }
+    }
+
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -49,8 +59,11 @@ public class DialogFragment extends AppCompatDialogFragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String insert = topic.getText().toString().trim();
-                Boolean save = true;
-                dialogFragmentListener.applytext(insert,save);
+                if(validate(insert)) {
+                    Boolean save = true;
+                    dialogFragmentListener.applytext(insert, save);
+                }else
+                    onCreateDialog(savedInstanceState);
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override

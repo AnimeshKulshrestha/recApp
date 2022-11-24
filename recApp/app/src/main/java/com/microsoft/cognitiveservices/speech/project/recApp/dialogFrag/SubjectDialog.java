@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -54,10 +55,12 @@ public class SubjectDialog extends AppCompatDialogFragment {
         urldb = "https://recapp-9edb4-default-rtdb.asia-southeast1.firebasedatabase.app";
         database = FirebaseDatabase.getInstance(urldb);
         reference = database.getReference().child("Users").child(auth.getUid()).child("Taught");
-        reference.addValueEventListener(new ValueEventListener() {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 subcount = snapshot.getChildrenCount();
+                topic = view.findViewById(R.id.topictext);
+                topic.setText("Course "+subcount);
             }
 
             @Override
@@ -66,15 +69,16 @@ public class SubjectDialog extends AppCompatDialogFragment {
             }
         });
 
-        topic = view.findViewById(R.id.topictext);
-
-        topic.setText("Course "+subcount);
         builder.setView(view).setTitle("Course Name").setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String insert = topic.getText().toString().trim();
-                Boolean save = true;
-                subjectDialogListener.coursenameadd(insert,save);
+                if(!validate(insert))
+                    onCreateDialog(savedInstanceState);
+                else {
+                    Boolean save = true;
+                    subjectDialogListener.coursenameadd(insert, save);
+                }
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
@@ -90,5 +94,14 @@ public class SubjectDialog extends AppCompatDialogFragment {
 
     public interface SubjectDialogListener{
         void coursenameadd(String topic,Boolean save);
+    }
+
+    public boolean validate(String insert){
+        if(insert==null || insert.equals("")){
+            Toast.makeText(getContext(),"Field cannot be empty",Toast.LENGTH_LONG).show();
+            return false;
+        }else{
+            return true;
+        }
     }
 }
