@@ -129,6 +129,7 @@ public class Subjects extends AppCompatActivity implements SubjectDialog.Subject
                                         FirebaseAuth.getInstance().signOut();
                                         Intent i = new Intent(Subjects.this,Login.class);
                                         startActivity(i);
+                                        finish();
                                     }
                                 })
                                 .setNegativeButton("No", new DialogInterface.OnClickListener() {

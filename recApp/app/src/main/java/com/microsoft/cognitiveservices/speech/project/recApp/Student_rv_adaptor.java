@@ -71,11 +71,6 @@ public class Student_rv_adaptor extends RecyclerView.Adapter<Student_rv_adaptor.
                     if(existing.getUserId().equals(user.getUserId())) {
                         holder.add_stu.setText("ADDED");
                         holder.add_stu.setEnabled(false);
-                    }else {
-//                        holder.add_stu.setText("ADD");
-//                        holder.add_stu.setEnabled(true);
-//                        database.getReference().child("Users").child(user.getUserId()).child("Studies")
-//                                .child(subjectId).removeValue();
                     }
                 }
             }

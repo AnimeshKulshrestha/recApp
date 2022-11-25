@@ -32,6 +32,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.microsoft.cognitiveservices.speech.project.recApp.models.Transmodel;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class TransReyclerAdaptor extends RecyclerView.Adapter<TransReyclerAdaptor.viewHolder>{
@@ -74,7 +75,7 @@ public class TransReyclerAdaptor extends RecyclerView.Adapter<TransReyclerAdapto
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
         Transmodel trans = getArrTrans().get(position);
-        if(state=="Studies")
+        if(state.equalsIgnoreCase("Studies"))
             holder.delete.setVisibility(View.GONE);
         holder.filename.setText(trans.getFilename());
         holder.download.setOnClickListener(new View.OnClickListener() {
@@ -88,8 +89,14 @@ public class TransReyclerAdaptor extends RecyclerView.Adapter<TransReyclerAdapto
                                 Uri uri = Uri.parse(trans.getUrl());
                                 DownloadManager.Request request = new DownloadManager.Request(uri);
                                 request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
-                                request.setDestinationInExternalFilesDir(getContext(), Environment.DIRECTORY_DOWNLOADS, trans.getFilename()+".txt");
-                                manager.enqueue(request);
+                                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOCUMENTS, trans.getFilename()+".txt");
+                                request.setTitle("Downloading "+trans.getFilename());
+                                try {
+                                    manager.openDownloadedFile(manager.enqueue(request));
+                                } catch (FileNotFoundException e) {
+                                    Toast.makeText(getContext(),"Failed to download",Toast.LENGTH_LONG);
+                                }
+
                             }
                         }).setNegativeButton("No", new DialogInterface.OnClickListener() {
                             @Override
@@ -129,7 +136,7 @@ public class TransReyclerAdaptor extends RecyclerView.Adapter<TransReyclerAdapto
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                Toast.makeText(context,trans.getUnique_id(),Toast.LENGTH_LONG).show();
+                                Toast.makeText(context,"Download cancelled",Toast.LENGTH_LONG).show();
                             }
                         });
                 AlertDialog alertDialog =  getBuilder().create();

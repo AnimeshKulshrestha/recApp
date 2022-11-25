@@ -51,7 +51,7 @@ public class Login extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mAuth = FirebaseAuth.getInstance();
-        if(mAuth.getCurrentUser()!=null) {
+        if(mAuth.getCurrentUser()!=null && mAuth.getCurrentUser().isEmailVerified()) {
             Intent intent = new Intent(Login.this, Subjects.class);
             startActivity(intent);
             finish();
@@ -70,6 +70,7 @@ public class Login extends AppCompatActivity{
             public void onClick(View view) {
                 Intent i = new Intent(Login.this,SignUp.class);
                 startActivity(i);
+                finish();
             }
         });
 
@@ -139,6 +140,7 @@ public class Login extends AppCompatActivity{
                 else
                     forgot.putExtra("mail_id","");
                 startActivity(forgot);
+                finish();
             }
         });
 
