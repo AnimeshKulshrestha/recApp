@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements DialogFragment.Di
     //
 
     // Replace below with your own subscription key
-    private static final String SpeechSubscriptionKey = "d0746c9b0beb430c823ead39a4aa84d2";
+    private static final String SpeechSubscriptionKey = "YourSubscriptionKey";
     // Replace below with your own service region (e.g., "westus").
     private static final String SpeechRegion = "eastus";
 
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements DialogFragment.Di
         recognizedTextView = findViewById(R.id.recognizedText);
         recognizedTextView.setMovementMethod(new ScrollingMovementMethod());
         recognizeContinuousButton = findViewById(R.id.buttonRecognizeContinuous);
-        urldb = "https://recapp-9edb4-default-rtdb.asia-southeast1.firebasedatabase.app";
+        urldb = "yourFirabaseDatabaseURL";
         builder = new AlertDialog.Builder(this);
         pushId = getIntent().getStringExtra("pushId");
         dialogFragment = new DialogFragment();

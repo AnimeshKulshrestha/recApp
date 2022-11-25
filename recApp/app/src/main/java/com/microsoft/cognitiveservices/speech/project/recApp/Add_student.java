@@ -45,7 +45,7 @@ public class Add_student extends AppCompatActivity {
 
         students = new ArrayList<User>();
         recyclerView = findViewById(R.id.stu_rv_add);
-        urldb = "https://recapp-9edb4-default-rtdb.asia-southeast1.firebasedatabase.app";
+        urldb = "yourFirabaseDatabaseURL";
         sub_Id = getIntent().getStringExtra("push_Id");
         swipeRefreshLayout = findViewById(R.id.refresh_add_stu);
         searchView = findViewById(R.id.search_stu_add);

@@ -40,7 +40,7 @@ public class Student_rv_adaptor extends RecyclerView.Adapter<Student_rv_adaptor.
         this.subjectId = subjectId;
         this.inst_id = inst_id;
         firebaseAuth = FirebaseAuth.getInstance();
-        urldb = "https://recapp-9edb4-default-rtdb.asia-southeast1.firebasedatabase.app";
+        urldb = "yourFirabaseDatabaseURL";
         database = FirebaseDatabase.getInstance(urldb);
         reference = database.getReference().child("Users").child(firebaseAuth.getUid())
                 .child("Taught").child(subjectId).child("Students");

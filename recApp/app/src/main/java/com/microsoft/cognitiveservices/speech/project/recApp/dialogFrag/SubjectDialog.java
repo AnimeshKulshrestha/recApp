@@ -52,7 +52,7 @@ public class SubjectDialog extends AppCompatDialogFragment {
         View view = layoutInflater.inflate(R.layout.layout_add_topic,null);
 
         auth = FirebaseAuth.getInstance();
-        urldb = "https://recapp-9edb4-default-rtdb.asia-southeast1.firebasedatabase.app";
+        urldb = "yourFirabaseDatabaseURL";
         database = FirebaseDatabase.getInstance(urldb);
         reference = database.getReference().child("Users").child(auth.getUid()).child("Taught");
         reference.addListenerForSingleValueEvent(new ValueEventListener() {

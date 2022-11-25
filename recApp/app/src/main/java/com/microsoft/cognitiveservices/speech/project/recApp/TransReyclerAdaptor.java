@@ -52,7 +52,7 @@ public class TransReyclerAdaptor extends RecyclerView.Adapter<TransReyclerAdapto
         this.arrTrans = arrTrans;
         this.state = state;
         builder = new AlertDialog.Builder(context);
-        urldb = "https://recapp-9edb4-default-rtdb.asia-southeast1.firebasedatabase.app";
+        urldb = "yourFirabaseDatabaseURL";
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseStorage = FirebaseStorage.getInstance();
         database = FirebaseDatabase.getInstance(urldb);

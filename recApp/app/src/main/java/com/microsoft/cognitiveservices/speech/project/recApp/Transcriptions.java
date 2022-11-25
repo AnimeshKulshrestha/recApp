@@ -73,7 +73,7 @@ public class Transcriptions extends AppCompatActivity {
         firebaseStorage = FirebaseStorage.getInstance();
         swipeRefreshLayout = findViewById(R.id.refresh_trans);
         builder = new AlertDialog.Builder(this);
-        urldb = "https://recapp-9edb4-default-rtdb.asia-southeast1.firebasedatabase.app";
+        urldb = "yourFirabaseDatabaseURL";
         database = FirebaseDatabase.getInstance(urldb);
         state = getIntent().getStringExtra("c_state");
         pushId = getIntent().getStringExtra("pushId");

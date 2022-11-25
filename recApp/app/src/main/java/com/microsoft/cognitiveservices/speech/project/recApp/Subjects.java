@@ -63,7 +63,7 @@ public class Subjects extends AppCompatActivity implements SubjectDialog.Subject
         setSupportActionBar(findViewById(R.id.toolbar));
 
         auth = FirebaseAuth.getInstance();
-        urldb = "https://recapp-9edb4-default-rtdb.asia-southeast1.firebasedatabase.app";
+        urldb = "yourFirabaseDatabaseURL";
         database = FirebaseDatabase.getInstance(urldb);
         reference = database.getReference().child("Users").child(auth.getUid());
         builder = new AlertDialog.Builder(this);
